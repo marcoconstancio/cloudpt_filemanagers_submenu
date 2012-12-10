@@ -59,7 +59,7 @@ On nautilus:
 * Copy *cloudpt_nautilus_submenu.py* and *cloudpt.png* to *.local/share/nautilus-python/extensions* (it might be necessary to create the directory)
 * Restart caja
 * Right-click while inside you home folder a select *CloudPT->Config CloudPT*
-* Insert the *Consumer key* and *Consumer secret* obtained earlier and press the *Link account button*
+* Insert the **Consumer key** and **Consumer secret** obtained earlier and press the *Link account button*
 * Click the **HERE** link, authorize the application a copy the pin from the browser to the dialog box and press the ok button.
 * Select the cloutpt dir and press ok.
 * Restart nautilus.
