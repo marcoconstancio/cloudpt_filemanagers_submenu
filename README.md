@@ -11,8 +11,8 @@ Current tested file managers:
 Screenshots
 ===========
 
-![Screenshot1](https://github.com/marcoconstancio/cloudpt_filemanagers_submenu/blob/master/screen1.jpg)
-![Screenshot2](https://github.com/marcoconstancio/cloudpt_filemanagers_submenu/blob/master/screen2.jpg)
+![Screenshot1](https://raw.github.com/marcoconstancio/cloudpt_filemanagers_submenu/master/screen1.jpg)
+![Screenshot2](https://raw.github.com/marcoconstancio/cloudpt_filemanagers_submenu/master/screen2.jpg)
 
 Instalation
 ==================
