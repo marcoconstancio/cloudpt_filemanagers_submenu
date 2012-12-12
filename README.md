@@ -71,8 +71,3 @@ Notes
 * Once the CloudPT folder is selected in *CloudPT->Config CloudPT* area the submenu will only be displayed in that folder.
 * All the configuration (and keys) is saved in *~/.cloudpt/cloudpt.ini* on your home folder. Make sure the directory *~/.cloudpt* exists so that configuration is correctly saved. In order to reset the configuration, close caja, and use **rm -rif ~/.cloudpt/cloudpt.ini** on terminal.
 * Make sure the cloudpt client is running so that the resquested actions, like recovering a file revision, are applied.
-
-License
-=====
-
-The files on this repo are free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. They are distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY. See the GNU General Public License for more details.
