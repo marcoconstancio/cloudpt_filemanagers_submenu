@@ -36,7 +36,7 @@ Install the following packages:
 
 On caja:
 
-* Copy *cloudpt_caja_submenu.py* and *cloudpt.png* to *.local/share/caja-python/extensions* (it might be necessary to create the directories)
+* Copy *cloudpt_caja_submenu.py* and *cloudpt.png* to *~/.local/share/caja-python/extensions* (it might be necessary to create the directories)
 * Restart caja
 * Right-click while inside you home folder a select *CloudPT->Config CloudPT*
 * Insert the **Consumer key** and **Consumer secret** obtained earlier and press the *Link account button*
@@ -56,7 +56,7 @@ Install the following packages:
 
 On nautilus:
 
-* Copy *cloudpt_nautilus_submenu.py* and *cloudpt.png* to *.local/share/nautilus-python/extensions* (it might be necessary to create the directory)
+* Copy *cloudpt_nautilus_submenu.py* and *cloudpt.png* to *~/.local/share/nautilus-python/extensions* (it might be necessary to create the directory)
 * Restart caja
 * Right-click while inside you home folder a select *CloudPT->Config CloudPT*
 * Insert the **Consumer key** and **Consumer secret** obtained earlier and press the *Link account button*
@@ -69,7 +69,7 @@ Notes
 =====
 
 * Once the CloudPT folder is selected in *CloudPT->Config CloudPT* area the submenu will only be displayed in that folder.
-* All the configuration (and keys) is saved in *~.cloudpt/cloudpt.ini* on your home folder. Make sure the directory *.cloudpt* exists so that configuration is correctly saved. In order to reset the configuration, close caja, and use **rm -rif ~./cloudpt/cloudpt.ini** on terminal.
+* All the configuration (and keys) is saved in *~/.cloudpt/cloudpt.ini* on your home folder. Make sure the directory *~/.cloudpt* exists so that configuration is correctly saved. In order to reset the configuration, close caja, and use **rm -rif ~/.cloudpt/cloudpt.ini** on terminal.
 * Make sure the cloudpt client is running so that the resquested actions, like recovering a file revision, are applied.
 
 License
