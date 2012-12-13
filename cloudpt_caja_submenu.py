@@ -12,7 +12,6 @@ from os.path import expanduser
 
 class CloudPtExtension(caja.MenuProvider):
     home_dir = expanduser("~")
-    extension_dir = os.path.join(home_dir,".local","share","caja-python","extensions")
     config_data = { 'request_token_url':'https://cloudpt.pt/oauth/request_token',
                     'access_token_url':'https://cloudpt.pt/oauth/access_token',
                     'authorize_url':'https://cloudpt.pt/oauth/authorize',
@@ -28,6 +27,7 @@ class CloudPtExtension(caja.MenuProvider):
     # Caja crashes if a plugin doesn't implement the __init__ method.
     # See Bug #374958
     def __init__(self):
+        self.extension_dir = os.path.dirname( __file__ )
         pass
 
     # Function is called when user selects files. 
@@ -51,8 +51,8 @@ class CloudPtExtension(caja.MenuProvider):
                 # builds menus -> name, label, icon, function, function parameter
                 if self.config_data['oauth_token'] and self.config_data['oauth_token_secret']:   
                     menu_layout = [["recover_previous_version","Recover previous version",gtk.STOCK_DND_MULTIPLE,self.recover_file_revision,selection],
-                                    ["create_file_link","Create file link",gtk.STOCK_CONNECT,self.get_file_link,selection],
-                                    ["delete_file_link","Delete file link",gtk.STOCK_DISCONNECT,self.delete_file_link,selection],
+                                    ["create_link","Create link",gtk.STOCK_CONNECT,self.get_file_link,selection],
+                                    ["delete_link","Delete link",gtk.STOCK_DISCONNECT,self.delete_link,selection],
                                     ["share_folder","Share folder",gtk.STOCK_DIRECTORY,self.share_folder,selection],
                                     ["config_cloud_pt","Config CloudPT",gtk.STOCK_PROPERTIES,self.config_cloud_pt,None]]
                 else:
@@ -448,47 +448,41 @@ class CloudPtExtension(caja.MenuProvider):
 
     # Returns a hyperlink for a seletect file 
     def get_file_link(self, widget,file):
-        if os.path.isdir(file) == True:
-            self.show_dialog("The selection is a folder. It is only possible to create links for files.")
-        else:
-            consumer = oauth.Consumer(self.config_data['consumer_key'], self.config_data['consumer_secret'])
-            access_token = oauth.Token(self.config_data['oauth_token'], self.config_data['oauth_token_secret'])
-            client = oauth.Client(consumer, access_token)
-            filename_relative_path = file[self.config_data['cloudpt_dir_len']:] 
+        consumer = oauth.Consumer(self.config_data['consumer_key'], self.config_data['consumer_secret'])
+        access_token = oauth.Token(self.config_data['oauth_token'], self.config_data['oauth_token_secret'])
+        client = oauth.Client(consumer, access_token)
+        filename_relative_path = file[self.config_data['cloudpt_dir_len']:] 
 
-            # request file link
-            response = client.request( self.config_data['api_url'] + '/Shares/cloudpt'+ urllib.quote(filename_relative_path), 'POST')
-            if response[0]['status'] == "404":
-                self.show_dialog("Error on creating the link for the selected file.")            
-            elif response[0]['status'] == "200":
-                response_array = json.loads(response[1])     
-                self.show_dialog("The link for "+filename_relative_path+" is:\n<a href='"+response_array['url']+"'>"+response_array['url']+"</a>")  
+        # request file link
+        response = client.request( self.config_data['api_url'] + '/Shares/cloudpt'+ urllib.quote(filename_relative_path), 'POST')
+        if response[0]['status'] == "404":
+            self.show_dialog("Error on creating the link for the selected file.")            
+        elif response[0]['status'] == "200":
+            response_array = json.loads(response[1])     
+            self.show_dialog("The link for "+filename_relative_path+" is:\n<a href='"+response_array['url']+"'>"+response_array['url']+"</a>")  
 
     # Delete a file hyperlink for a seletect file 
-    def delete_file_link(self,widget,file):
-        if os.path.isdir(file) == True:
-            self.show_dialog("The selection is a folder. It is only possible to create links for files.")
-        else:          
-            consumer = oauth.Consumer(self.config_data['consumer_key'], self.config_data['consumer_secret'])
-            access_token = oauth.Token(self.config_data['oauth_token'], self.config_data['oauth_token_secret'])
-            client = oauth.Client(consumer, access_token)
-            filename_relative_path = file[self.config_data['cloudpt_dir_len']:] 
+    def delete_link(self,widget,file):          
+        consumer = oauth.Consumer(self.config_data['consumer_key'], self.config_data['consumer_secret'])
+        access_token = oauth.Token(self.config_data['oauth_token'], self.config_data['oauth_token_secret'])
+        client = oauth.Client(consumer, access_token)
+        filename_relative_path = file[self.config_data['cloudpt_dir_len']:] 
 
-            links_sharedids = {}
+        links_sharedids = {}
 
-            response = client.request(self.config_data['api_url'] + '/ListLinks', 'GET')
-            response_array = json.loads(response[1])
-            for file_data in response_array:
-                links_sharedids[file_data['path']] = file_data['shareid'] 
+        response = client.request(self.config_data['api_url'] + '/ListLinks', 'GET')
+        response_array = json.loads(response[1])
+        for file_data in response_array:
+            links_sharedids[file_data['path']] = file_data['shareid'] 
 
-            try:   
-                response = client.request(self.config_data['api_url'] + '/DeleteLink', 'POST', urllib.urlencode({'shareid': links_sharedids[filename_relative_path]}))
-                if response[0]['status'] == "404":
-                    self.show_dialog("Error on deleting the link for the selected file.")            
-                elif response[0]['status'] == "200":
-                    self.show_dialog("The link was deleted successfully")  
-            except KeyError:
-                self.show_dialog("There in no link associated with this file.")    
+        try:   
+            response = client.request(self.config_data['api_url'] + '/DeleteLink', 'POST', urllib.urlencode({'shareid': links_sharedids[filename_relative_path]}))
+            if response[0]['status'] == "404":
+                self.show_dialog("Error on deleting the link for the selected file.")            
+            elif response[0]['status'] == "200":
+                self.show_dialog("The link was deleted successfully")  
+        except KeyError:
+            self.show_dialog("There in no link associated with this file.")    
 
     # Allows folder sharing with other users, receives user emails 
     def share_folder(self,widget,file):
