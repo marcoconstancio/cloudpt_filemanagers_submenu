@@ -34,14 +34,13 @@ Install the following packages:
 
 * caja 
 * python-caja
-* gir1.2-caja
 * python-gtk
 
 On caja:
 
 * Copy *cloudpt_caja_submenu.py* and *cloudpt.png* to *~/.local/share/caja-python/extensions* or */usr/share/share/caja-python/extensions* (it might be necessary to create the directories)
 * Restart caja
-* Right-click while inside you home folder a select *CloudPT->Config CloudPT*
+* Right-click while inside your home folder a select *CloudPT->Config CloudPT*
 * Insert the **Consumer key** and **Consumer secret** obtained earlier and press the *Link account button*
 * Click the **HERE** link, authorize the application a copy the pin from the browser to the dialog box and press the ok button.
 * Select the cloutpt dir and press the ok.
@@ -55,14 +54,13 @@ Install the following packages:
 
 * nautilus 
 * python-nautilus
-* gir1.2-nautilus
 * python-gtk
 
 On nautilus:
 
 * Copy *cloudpt_nautilus_submenu.py* and *cloudpt.png* to *~/.local/share/nautilus-python/extensions* or */usr/share/share/nautilus-python/extensions* (it might be necessary to create the directory)
 * Restart caja
-* Right-click while inside you home folder a select *CloudPT->Config CloudPT*
+* Right-click while inside your home folder a select *CloudPT->Config CloudPT*
 * Insert the **Consumer key** and **Consumer secret** obtained earlier and press the *Link account button*
 * Click the **HERE** link, authorize the application a copy the pin from the browser to the dialog box and press the ok button.
 * Select the cloutpt dir and press ok.
@@ -87,7 +85,7 @@ On thunar:
 	* on 64bits: /usr/lib/x86\_64-linux-gnu/thunarx-1/python or /usr/lib/x86\_64-linux-gnu/thunarx-2/python
 * Copy *cloudpt_thunar_submenu.py* and *cloudpt.png* to extension directory
 * Restart thunar
-* Right-click while inside you home folder a select *CloudPT->Config CloudPT*
+* Right-click while inside your home folder a select *CloudPT->Config CloudPT*
 * Insert the **Consumer key** and **Consumer secret** obtained earlier and press the *Link account button*
 * Click the **HERE** link, authorize the application a copy the pin from the browser to the dialog box and press the ok button.
 * Select the cloutpt dir and press ok.
