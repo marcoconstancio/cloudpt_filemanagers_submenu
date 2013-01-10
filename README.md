@@ -23,7 +23,7 @@ Instalation
 On your browser:	
 
 * Login to your cloudpt account
-* Go to **API->As Minhas Aplicações->Create a cloudpt app** and create application access, choose a name, select the **Out of band** option and leave **Sandbox** unchecked and save. 
+* Go to **API->Minhas Aplicações->Create a cloudpt app** and create application access, choose a name, select the **Out of band** option and leave **Sandbox** unchecked and save. 
 * Click on *Edit app edits* and copy the **Consumer key** and **Segredo** keys.
 
 
