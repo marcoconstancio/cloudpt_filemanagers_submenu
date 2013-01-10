@@ -15,7 +15,7 @@ class CloudPtExtension(caja.MenuProvider):
     config_data = { 'request_token_url':'https://cloudpt.pt/oauth/request_token',
                     'access_token_url':'https://cloudpt.pt/oauth/access_token',
                     'authorize_url':'https://cloudpt.pt/oauth/authorize',
-                    'api_url':'https://api.cloudpt.pt/Storage/CloudPT',
+                    'api_url':'https://publicapi.cloudpt.pt',
                     'consumer_key':'',
                     'consumer_secret':'',
                     'oauth_token':'',
@@ -169,7 +169,7 @@ class CloudPtExtension(caja.MenuProvider):
         if default_value != None:
             return text.strip()          
     
-    # Necessary function for the dialog box to accept response when user presses the ENTER ley   
+    # Necessary function for the dialog box to accept response when user presses the ENTER key   
     def dialog_key_pressed_response(self, entry, dialog, response):
         dialog.response(response)
 
@@ -283,8 +283,7 @@ class CloudPtExtension(caja.MenuProvider):
             client = oauth.Client(consumer, access_token)
 
             for files_folder in selected_file_folder_list:
-                response = client.request(self.config_data['api_url'] + '/UndeleteTree/cloudpt/' + urllib.quote(files_folder), 'POST')
-                # self.show_dialog(str(response),None)
+                response = client.request(self.config_data['api_url'] + '/1/UndeleteTree/cloudpt/' + urllib.quote(files_folder), 'POST')
                 if response[0]['status'] == "404":
                     num_failures+=1
                 elif response[0]['status'] == "200":
@@ -299,7 +298,7 @@ class CloudPtExtension(caja.MenuProvider):
         consumer = oauth.Consumer(self.config_data['consumer_key'], self.config_data['consumer_secret'])
         access_token = oauth.Token(self.config_data['oauth_token'], self.config_data['oauth_token_secret'])
         client = oauth.Client(consumer, access_token)
-        folder_list_url = self.config_data['api_url'] + '/List/cloudpt' + urllib.quote(folder_list_path)
+        folder_list_url = self.config_data['api_url'] + '/1/List/cloudpt' + urllib.quote(folder_list_path)
 
         folder_list = []
         folder_list_deleted_files = []
@@ -416,7 +415,7 @@ class CloudPtExtension(caja.MenuProvider):
             filename_relative_path = file[self.config_data['cloudpt_dir_len']:] 
 
             # Get all revisions and displays them in the select file folder dialog
-            response = client.request(self.config_data['api_url']  + '/Revisions/cloudpt' + urllib.quote(filename_relative_path), 'GET')
+            response = client.request(self.config_data['api_url']  + '/1/Revisions/cloudpt' + urllib.quote(filename_relative_path), 'GET')
             if response[0]['status'] == "404":
                 self.show_dialog("Error on retrieving revisions for this file.")            
             elif response[0]['status'] == "200":
@@ -440,7 +439,7 @@ class CloudPtExtension(caja.MenuProvider):
                 selected_files_revision = self.select_file_folder_dialog(file_dates_list,'Please select a revision to restore.')
                 
                 if selected_files_revision:
-                    response = client.request(self.config_data['api_url'] + '/Restore/cloudpt' + urllib.quote(filename_relative_path), 'POST',urllib.urlencode({'rev':file_revisions_list[selected_files_revision[0]]}))
+                    response = client.request(self.config_data['api_url'] + '/1/Restore/cloudpt' + urllib.quote(filename_relative_path), 'POST',urllib.urlencode({'rev':file_revisions_list[selected_files_revision[0]]}))
                     if response[0]['status'] == "404":
                         self.show_dialog("Error on recovering the selected revision for the file.") 
                     elif response[0]['status'] == "200":
@@ -454,7 +453,7 @@ class CloudPtExtension(caja.MenuProvider):
         filename_relative_path = file[self.config_data['cloudpt_dir_len']:] 
 
         # request file link
-        response = client.request( self.config_data['api_url'] + '/Shares/cloudpt'+ urllib.quote(filename_relative_path), 'POST')
+        response = client.request( self.config_data['api_url'] + '/1/Shares/cloudpt'+ urllib.quote(filename_relative_path), 'POST')
         if response[0]['status'] == "404":
             self.show_dialog("Error on creating the link for the selected file.")            
         elif response[0]['status'] == "200":
@@ -470,13 +469,13 @@ class CloudPtExtension(caja.MenuProvider):
 
         links_sharedids = {}
 
-        response = client.request(self.config_data['api_url'] + '/ListLinks', 'GET')
+        response = client.request(self.config_data['api_url'] + '/1/ListLinks', 'GET')
         response_array = json.loads(response[1])
         for file_data in response_array:
             links_sharedids[file_data['path']] = file_data['shareid'] 
 
         try:   
-            response = client.request(self.config_data['api_url'] + '/DeleteLink', 'POST', urllib.urlencode({'shareid': links_sharedids[filename_relative_path]}))
+            response = client.request(self.config_data['api_url'] + '/1/DeleteLink', 'POST', urllib.urlencode({'shareid': links_sharedids[filename_relative_path]}))
             if response[0]['status'] == "404":
                 self.show_dialog("Error on deleting the link for the selected file.")            
             elif response[0]['status'] == "200":
@@ -493,6 +492,7 @@ class CloudPtExtension(caja.MenuProvider):
             email_list = inputed_email_strings.split(",")
             email_array = []
             email_sucess_array = []
+            email_already_array = []
 
             for email_string in email_list:
                 if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email_string.strip()) != None:
@@ -504,14 +504,25 @@ class CloudPtExtension(caja.MenuProvider):
                 client = oauth.Client(consumer, access_token)
 
                 for email_addr in email_array:
-                    response = client.request(self.config_data['api_url'] + '/ShareFolder/cloudpt' +  urllib.quote(filename_relative_path), 'POST', urllib.urlencode({'to_email':email_addr}))
+                    response = client.request(self.config_data['api_url'] + '/1/ShareFolder/cloudpt' +  urllib.quote(filename_relative_path), 'POST', urllib.urlencode({'to_email':email_addr}))
                     if response[0]['status'] == "200":
                         email_sucess_array.append(email_addr)
+                    elif response[0]['status'] == "406":
+                        email_already_array.append(email_addr)
 
+                message = ''
                 if email_sucess_array:
-                    self.show_dialog("The folder "+filename_relative_path+" was shared with the following emails:\n" + ", ".join(email_sucess_array))  
+                    message = "The folder "+filename_relative_path+" was shared with the following emails:\n" + ", ".join(email_sucess_array) + '\n'
                 else:
-                    self.show_dialog("No invitions were sent. Check if this folder is synced with CloudPT." )  
+                    message = "No invitions were sent. "
+                    if not email_already_array:
+                        message = message + ' Check if this folder is synced with CloudPT.'                
+                
+                if email_already_array:
+                    message = message + 'Email invitions were not sent to following emails because they were already sent previously:\n'+ ", ".join(email_already_array)                     
+
+                self.show_dialog(message) 
+
             else:
                 self.show_dialog("No valid email address were inputed." )  
         else:                  

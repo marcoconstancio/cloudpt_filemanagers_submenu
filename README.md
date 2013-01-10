@@ -35,6 +35,7 @@ Install the following packages:
 * caja 
 * python-caja
 * python-gtk
+* python-auth2
 
 On caja:
 
@@ -55,6 +56,7 @@ Install the following packages:
 * nautilus 
 * python-nautilus
 * python-gtk
+* python-auth2
 
 On nautilus:
 
@@ -75,6 +77,7 @@ Install the following packages:
 * thunar 
 * python-nautilus
 * thunarx-python
+* python-auth2
 
 On thunar:
 
